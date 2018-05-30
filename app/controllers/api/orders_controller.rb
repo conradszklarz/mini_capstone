@@ -16,8 +16,5 @@ class Api::OrdersController < ApplicationController
     
     @order = Order.find(params[:id])
     render 'show.json.jbuilder'
-    
   end
-
-
 end

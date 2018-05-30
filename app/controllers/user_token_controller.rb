@@ -8,5 +8,5 @@ class UserTokenController < Knock::AuthTokenController
     }
     render json: body, status: :created
   end
-
 end
+

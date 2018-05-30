@@ -2,9 +2,6 @@ class Order < ApplicationRecord
   belongs_to :product
   belongs_to :user
 
-
-
-
   def calculate_subtotal
     self.subtotal = product.price * quantity
   end
@@ -14,19 +11,16 @@ class Order < ApplicationRecord
   end
 
   def calculate_total
-    self.subtotal + tax
+    self.total = subtotal + tax
   end
 
   def calculate_totals
-    @order.calculate_subtotal
-    @order.calculate_tax
-    @order.calculate_total
+    calculate_subtotal   
+    calculate_tax
+    calculate_total 
   end
 
-
-
-  def purchased on
-    created_at.strftime('%A, %d %b %Y %l:%M %p')
+  def purchased_on
+    created_at.strftime('%b %e, %l:%M %p')
   end
-
 end

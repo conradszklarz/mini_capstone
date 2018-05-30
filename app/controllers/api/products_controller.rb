@@ -1,14 +1,14 @@
 class Api::ProductsController < ApplicationController
   def index
-    @products = Product.all.order[:id]
+    @products = Product.all
 
     search_term = params[:search]
     if search_term
-      @products = @products.where("title iLIKE ?", "%#{search_term}%", "%#{search_term}%" )
+      @products = @products.where("name iLIKE ? OR description iLIKE ?", "%#{search_term}%", "%#{search_term}%")
     end
 
-     sort_attribute = params[:sort_by]
-     sort_order = params[:sort_order]
+    sort_attribute = params[:sort_by]
+    sort_order = params[:sort_order]
 
     if sort_attribute && sort_order
       @products = @products.order(sort_attribute => sort_order)
@@ -18,23 +18,23 @@ class Api::ProductsController < ApplicationController
       @products = @products.order(:id => :asc)
     end
 
-     render 'index.json.jbuilder'
-
+    render 'index.json.jbuilder'
   end
 
   def show
-    puts "headers"
-    product_id = params("id")
+    product_id = params[:id]
     @product = Product.find(product_id)
     render 'show.json.jbuilder'
   end
 
   def create
-    @product = Product.new(name: params[:name],
+    @product = Product.new(
+                           name: params[:name],
                            price: params[:price],
-                        
-                           description: params[:description], supplier_id: params[:supplier_id]
-                           )
+                           description: params[:description],
+                           supplier_id: params[:supplier_id]
+                          )
+
     @product.save
     render 'show.json.jbuilder'
   end
@@ -42,12 +42,12 @@ class Api::ProductsController < ApplicationController
   def update
     product_id = params[:id]
     @product = Product.find(product_id)
-    @product.name =   || @product.name
-    @product.price = params[:price] || @product.price
-    
-    @product.description = params[:description] || @product.description
-    @product.supplier_id = params[:supplier_id] || @product.supplier_id  
 
+    @product.name = params[:name] || @product.name
+    @product.price = params[:price] || @product.price
+    @product.description = params[:description] || @product.description
+    @product.supplier_id = params[:supplier_id] || @product.supplier_id
+    
     @product.save
     render 'show.json.jbuilder'
   end
@@ -59,3 +59,4 @@ class Api::ProductsController < ApplicationController
     render json: {message: "Product successfully destroyed"}
   end
 end
+
