@@ -8,12 +8,13 @@ Rails.application.routes.draw do
     post '/products' => 'products#create'
     patch '/products/:id' => 'products#update'
     delete '/products/:id' => 'products#destroy'
+    delete '/carted_products/:id' => 'carted_products#destroy'
 
     post '/orders' => 'orders#create'
     get '/orders/:id' => 'orders#show'
 
+    get 'carted_products' => 'carted_products#index'
     post '/carted_products' => 'carted_products#create'
     get '/carted_products_id' => 'carted_products_id#show'
-    get 'carted_products' => 'carted_products#index'
   end
 end
