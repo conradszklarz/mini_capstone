@@ -1,4 +1,8 @@
 class Api::ProductsController < ApplicationController
+  before_action :authenticate_admin, only: [:create, :update, :destroy]
+
+
+
   def index
     @products = Product.all
 
@@ -35,18 +39,26 @@ class Api::ProductsController < ApplicationController
   end
 
   def create
-    @product = Product.new(
+    
+      @product = Product.new(
                            name: params[:name],
                            price: params[:price],
                            description: params[:description],
                            supplier_id: params[:supplier_id]
                           )
 
-    @product.save
-    render 'show.json.jbuilder'
+    if @product.save
+      render 'show.json.jbuilder'
+
+
+    else
+      render json: {errors: @product.errors.full_messages}, status: :unprocessable_entity
+    end
+    
   end
 
   def update
+    
     product_id = params[:id]
     @product = Product.find(product_id)
 
@@ -55,8 +67,11 @@ class Api::ProductsController < ApplicationController
     @product.description = params[:description] || @product.description
     @product.supplier_id = params[:supplier_id] || @product.supplier_id
     
-    @product.save
-    render 'show.json.jbuilder'
+    if @product.save
+      render 'show.json.jbuilder'
+    else
+      render json: {errors: @product.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   def destroy
